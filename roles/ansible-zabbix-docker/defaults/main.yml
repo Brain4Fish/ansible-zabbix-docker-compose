@@ -1,0 +1,13 @@
+---
+# defaults file for ansible-zabbix-docker
+zabbix:
+  data_path: "/usr/infra/zabbix"
+  name: "Zabbix Server"
+  version: "latest"
+  timezone: "Etc/GMT"
+  database: zabbix
+  db_user: zabbix
+  db_password: zabbix
+  mysql_root_password: root_pw
+  subnet: "172.16.238.0/24"
+  gateway: "172.16.238.1"

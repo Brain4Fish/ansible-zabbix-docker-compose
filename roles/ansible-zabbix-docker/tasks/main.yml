@@ -1,0 +1,34 @@
+---
+- name: Ensure, that dir exists
+  become: yes
+  file:
+    path: "{{ zabbix.data_path }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
+
+- name: Update repositories cache and install "pip" package
+  become: yes
+  apt:
+    name: python3-pip
+    update_cache: yes
+
+- name: Install docker python package
+  become: yes
+  pip:
+    name: 
+      - docker
+      - docker-compose
+
+- name: Creating docker-compose file for Zabbix server
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ zabbix.data_path }}/docker-compose.yml"
+
+- name: Run `docker-compose up` again
+  become: yes
+  docker_compose:
+    project_src: "{{ zabbix.data_path }}"
+    build: no
+    
