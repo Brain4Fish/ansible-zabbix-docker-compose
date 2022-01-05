@@ -1,0 +1,20 @@
+version: "2"
+
+services:
+  zabbix-agent:
+    restart: always
+    image: zabbix/zabbix-agent:{{ zabbix_agent_version }}
+    environment:
+      ZBX_HOSTNAME: "{{ inventory_hostname }}"
+      ZBX_PASSIVESERVERS: "{{ zabbix_agent_server }}"
+      ZBX_ACTIVESERVERS: "{{ zabbix_agent_server }}:{{ zabbix_agent_server_port }}"
+      ZBX_REFRESHACTIVECHECKS: "{{ zabbix_agent_refresh_active_checks | default('60') }}"
+    ports:
+      - "10050:10050"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /dev:/host/dev:ro
+      - /etc:/host/etc:ro
+      #- /var/run/docker.sock:/host/var/run/docker.sock

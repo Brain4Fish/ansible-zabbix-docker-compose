@@ -2,3 +2,4 @@
 - hosts: all
   roles:
     - role: ansible-zabbix-docker
+    - role: ansible-zabbix-agent-docker

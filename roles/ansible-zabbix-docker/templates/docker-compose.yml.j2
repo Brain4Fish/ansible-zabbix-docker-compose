@@ -2,16 +2,16 @@ version: "2"
 
 services:
   zabbix:
-    image: zabbix/zabbix-server-mysql:{{ zabbix.version }}
+    image: zabbix/zabbix-server-mysql:{{ zabbix_version }}
     environment:
       DB_SERVER_HOST: "mysql"
-      MYSQL_USER: "{{ zabbix.db_user }}"
-      MYSQL_PASSWORD: "{{ zabbix.db_password }}"
-      MYSQL_ROOT_PASSWORD: "{{ zabbix.mysql_root_password }}"
-      ZBX_TIMEOUT: "{{ zabbix.timeout | default('15') }}"
-      ZBX_STARTPOLLERS: "{{ zabbix.start_pollers | default('20') }}"
-      ZBX_CACHESIZE: "{{ zabbix.cache_size | default('32M') }}"
-      MYSQL_DATABASE: "{{ zabbix.database }}"
+      MYSQL_USER: "{{ zabbix_db_user }}"
+      MYSQL_PASSWORD: "{{ zabbix_db_password }}"
+      MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
+      ZBX_TIMEOUT: "{{ zabbix_timeout | default('15') }}"
+      ZBX_STARTPOLLERS: "{{ zabbix_start_pollers | default('20') }}"
+      ZBX_CACHESIZE: "{{ zabbix_cache_size | default('32M') }}"
+      MYSQL_DATABASE: "{{ zabbix_database }}"
     ports:
       - "10051:10051"
     restart: always
@@ -22,16 +22,16 @@ services:
       - mysql
 
   zabbix-web:
-    image: zabbix/zabbix-web-nginx-mysql:{{ zabbix.version }}
+    image: zabbix/zabbix-web-nginx-mysql:{{ zabbix_version }}
     restart: always
     environment:
       ZBX_SERVER_HOST: "zabbix"
       DB_SERVER_HOST: "mysql"
-      MYSQL_USER: "{{ zabbix.db_user }}"
-      MYSQL_PASSWORD: "{{ zabbix.db_password }}"
+      MYSQL_USER: "{{ zabbix_db_user }}"
+      MYSQL_PASSWORD: "{{ zabbix_db_password }}"
       PHP_TZ: "UTC"
-      ZBX_SERVER_NAME: "{{ zabbix.name }}"
-      MYSQL_DATABASE: "{{ zabbix.database }}"
+      ZBX_SERVER_NAME: "{{ zabbix_name }}"
+      MYSQL_DATABASE: "{{ zabbix_database }}"
     ports:
       - "80:8080"
     volumes:
@@ -41,16 +41,15 @@ services:
       - zabbix
 
   mysql:
-    image: mysql:5.6.41
+    image: mysql:5.7.36
     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     restart: always
     ports:
       - 3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: "{{ zabbix.mysql_root_password }}"
-      #MYSQL_DATABASE: "{{ zabbix.database }}"
-      MYSQL_USER: "{{ zabbix.db_user }}"
-      MYSQL_PASSWORD: "{{ zabbix.db_password }}"
+      MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
+      #MYSQL_DATABASE: "{{ zabbix_database }}"
+      MYSQL_USER: "{{ zabbix_db_user }}"
+      MYSQL_PASSWORD: "{{ zabbix_db_password }}"
     volumes:
       - "./mysql:/var/lib/mysql"
-

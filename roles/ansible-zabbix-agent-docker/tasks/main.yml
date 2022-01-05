@@ -2,7 +2,7 @@
 - name: Ensure, that dir exists
   become: yes
   file:
-    path: "{{ zabbix_data_path }}"
+    path: "{{ zabbix_agent_data_path }}"
     state: directory
     mode: "0755"
     owner: "{{ ansible_env.USER }}"
@@ -21,14 +21,14 @@
       - docker
       - docker-compose
 
-- name: Creating docker-compose file for Zabbix server
+- name: Creating docker-compose file for Zabbix agent
   template:
     src: docker-compose.yml.j2
-    dest: "{{ zabbix_data_path }}/docker-compose.yml"
+    dest: "{{ zabbix_agent_data_path }}/docker-compose.yml"
 
 - name: Run `docker-compose up` again
   become: yes
   docker_compose:
-    project_src: "{{ zabbix_data_path }}"
+    project_src: "{{ zabbix_agent_data_path }}"
     build: no
     
